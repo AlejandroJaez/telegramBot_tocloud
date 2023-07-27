@@ -38,7 +38,7 @@ async def downloader(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             filename = update.message.effective_attachment.file_name
         file = await attachment.download_to_drive(
-            custom_path="{0}/{1}".format(config["TOKEN"], filename)
+            custom_path="{0}/{1}".format(config["SAVE_DIR"], filename)
         )
         if isinstance(file, pathlib.WindowsPath):
             send = await context.bot.send_message(
