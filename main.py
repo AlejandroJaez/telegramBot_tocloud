@@ -1,4 +1,5 @@
 import logging
+import os
 import pathlib
 
 from telegram import Update, Location
@@ -37,8 +38,12 @@ async def downloader(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 update.message.effective_attachment.file_id
             )
             filename = update.message.effective_attachment.file_name
+        save_path = "{0}/{1}".format(config["SAVE_DIR"], update.effective_user.username)
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
         file = await attachment.download_to_drive(
-            custom_path="{0}/{1}".format(config["SAVE_DIR"], filename)
+            custom_path="{0}/{1}/{2}".format(config["SAVE_DIR"],
+                                             update.effective_user.username, filename)
         )
         if isinstance(file, pathlib.WindowsPath):
             send = await context.bot.send_message(
