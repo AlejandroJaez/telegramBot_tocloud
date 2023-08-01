@@ -32,13 +32,14 @@ async def downloader(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 update.message.effective_attachment[-1].file_id
             )
             file_extension = attachment.file_path.rsplit(".", 1)[-1]
-            filename = attachment.file_unique_id + "." + file_extension
+            filename = attachment.file_path.split('/')[-1]
         else:
             attachment = await context.bot.get_file(
                 update.message.effective_attachment.file_id
             )
-            filename = update.message.effective_attachment.file_name
-        save_path = "{0}/{1}".format(config["SAVE_DIR"], update.effective_user.username)
+            filename = attachment.file_path.split('/')[-1]
+
+        save_path = "{0}/{1}".format(os.path.join(config["SAVE_DIR"], attachment.file_path.split('/')[-1]), update.effective_user.username)
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         file = await attachment.download_to_drive(
