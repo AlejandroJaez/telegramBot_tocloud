@@ -39,13 +39,12 @@ async def downloader(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             filename = attachment.file_path.split('/')[-1]
 
-        save_path = "{0}/{1}".format(os.path.join(config["SAVE_DIR"], attachment.file_path.split('/')[-1]), update.effective_user.username)
+        save_path = "{0}".format(os.path.join(config["SAVE_DIR"], update.effective_user.username))
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         file = await attachment.download_to_drive(
             custom_path="{0}/{1}/{2}".format(config["SAVE_DIR"],
-                                             update.effective_user.username, filename)
-        )
+                                             update.effective_user.username, attachment.file_path.split('/')[-1]))
         if isinstance(file, pathlib.WindowsPath):
             send = await context.bot.send_message(
                 chat_id=update.effective_chat.id,
